@@ -105,7 +105,7 @@ export default function ItineraryList({ refreshKey }: { refreshKey?: number }) {
     try {
       const token = Cookies.get("token");
       const res = await fetch(
-        `http://localhost:5000/api/travel/destinations?page=${pageNum}&limit=6`,
+        `https://travel-ozju.vercel.app/api/travel/destinations?page=${pageNum}&limit=6`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const data = await res.json();
@@ -135,7 +135,7 @@ export default function ItineraryList({ refreshKey }: { refreshKey?: number }) {
     setDetailLoading(true);
     try {
       const token = Cookies.get("token");
-      const res = await fetch(`http://localhost:5000/api/travel/destinations/${id}`, {
+      const res = await fetch(`https://travel-ozju.vercel.app/api/travel/destinations/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -297,7 +297,7 @@ export default function ItineraryList({ refreshKey }: { refreshKey?: number }) {
             <DialogTitle className="text-xl font-bold">
               {selected
                 ? selected.travel_itinerary?.title ||
-                  `${selected.yourCity} → ${selected.destinationCity}`
+                `${selected.yourCity} → ${selected.destinationCity}`
                 : "Itinerary Details"}
             </DialogTitle>
             {selected && (
@@ -367,9 +367,8 @@ export default function ItineraryList({ refreshKey }: { refreshKey?: number }) {
                                 </div>
                                 {act.type && (
                                   <span
-                                    className={`shrink-0 text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full ${
-                                      typeColors[act.type] ?? "bg-secondary text-secondary-foreground"
-                                    }`}
+                                    className={`shrink-0 text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full ${typeColors[act.type] ?? "bg-secondary text-secondary-foreground"
+                                      }`}
                                   >
                                     {typeEmoji[act.type] ?? ""} {act.type}
                                   </span>

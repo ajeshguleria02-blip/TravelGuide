@@ -67,7 +67,7 @@ export default function Itinerary({ onCreated }: { onCreated?: () => void }) {
     });
 
     try {
-      const res = await fetch("http://localhost:5000/api/travel", {
+      const res = await fetch("https://travel-ozju.vercel.app/api/travel", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
