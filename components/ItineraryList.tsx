@@ -21,6 +21,9 @@ import {
   AlertCircle,
   Loader2,
   ListChecks,
+  Share2,
+  Check,
+  Copy,
 } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -96,6 +99,30 @@ export default function ItineraryList({ refreshKey }: { refreshKey?: number }) {
   const [selected, setSelected] = useState<DestinationDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  // ── Build & copy share link ─────────────────────────────────────────────────
+
+  const handleShare = async (dest: DestinationDetail) => {
+    const payload = {
+      title: dest.travel_itinerary?.title,
+      summary: dest.travel_itinerary?.summary,
+      yourCity: dest.yourCity,
+      destinationCity: dest.destinationCity,
+      days: dest.travel_itinerary?.days,
+      tips: dest.travel_itinerary?.tips,
+    };
+    const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
+    const url = `${window.location.origin}/share#data=${encoded}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback: select a prompt
+      window.prompt("Copy this link:", url);
+    }
+  };
 
   // ── Fetch list ──────────────────────────────────────────────────────────────
 
@@ -294,12 +321,28 @@ export default function ItineraryList({ refreshKey }: { refreshKey?: number }) {
       <Dialog open={modalOpen} onOpenChange={setModalOpen}>
         <DialogContent className="sm:max-w-[650px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold">
-              {selected
-                ? selected.travel_itinerary?.title ||
-                `${selected.yourCity} → ${selected.destinationCity}`
-                : "Itinerary Details"}
-            </DialogTitle>
+            <div className="flex items-start justify-between gap-3">
+              <DialogTitle className="text-xl font-bold">
+                {selected
+                  ? selected.travel_itinerary?.title ||
+                  `${selected.yourCity} → ${selected.destinationCity}`
+                  : "Itinerary Details"}
+              </DialogTitle>
+              {selected && selected.travel_itinerary && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full shrink-0 gap-1.5"
+                  onClick={() => handleShare(selected)}
+                >
+                  {copied ? (
+                    <><Check className="w-3.5 h-3.5" /> Copied!</>
+                  ) : (
+                    <><Share2 className="w-3.5 h-3.5" /> Share</>
+                  )}
+                </Button>
+              )}
+            </div>
             {selected && (
               <DialogDescription>
                 {selected.yourCity} → {selected.destinationCity} &middot;{" "}
