@@ -35,7 +35,9 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col relative">
         {/* Global Logo Badge */}
         <Navbar />
-        {children}
+        <div className="w-full h-full pt-10">
+          {children}
+        </div>
       </body>
     </html>
   );
